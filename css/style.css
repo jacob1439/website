@@ -130,3 +130,15 @@ h1, h2, h3, h4, h5, h6 {
 .social-links a:hover {
   color: #695aa6;
 }
+
+.text-right {
+  text-align: right !important;
+}
+
+.m-auto {
+  margin: auto !important;
+}
+
+.mx-sm-auto {
+    margin-left: auto !important;
+  }
