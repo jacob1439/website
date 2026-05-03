@@ -1,42 +1,284 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="utf-8">
-    <title>Welcome</title>
-    <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Alex Morgan — Developer</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #ffffff;
+    --bg2: #f8f8f6;
+    --text: #1a1a18;
+    --muted: #6b6b68;
+    --border: rgba(0,0,0,0.1);
+    --accent: #2c2c2a;
+  }
+  html { scroll-behavior: smooth; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; font-size: 16px; }
+
+  #hero-bg {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100vh;
+    z-index: -1; overflow: hidden;
+  }
+  #hero-bg canvas { display: block; width: 100%; height: 100%; }
+
+  /* NAV */
+  nav { position: fixed; top: 0; width: 100%; background: rgba(255,255,255,0.92); backdrop-filter: blur(8px); border-bottom: 0.5px solid var(--border); z-index: 100; }
+  .nav-inner { max-width: 900px; margin: 0 auto; padding: 0 2rem; display: flex; align-items: center; justify-content: space-between; height: 56px; }
+  .nav-logo { font-weight: 500; font-size: 15px; letter-spacing: -0.01em; text-decoration: none; color: var(--text); }
+  .nav-links { display: flex; gap: 2rem; list-style: none; }
+  .nav-links a { text-decoration: none; color: var(--muted); font-size: 14px; transition: color 0.15s; }
+  .nav-links a:hover { color: var(--text); }
+
+  /* SECTIONS */
+  section { max-width: 900px; margin: 0 auto; padding: 5rem 2rem; }
+
+  /* HERO */
+  #hero { padding-top: 9rem; padding-bottom: 5rem; }
+  .hero-tag { font-size: 13px; color: var(--muted); letter-spacing: 0.04em; text-transform: uppercase; margin-bottom: 1.2rem; }
+  .hero-name { font-size: clamp(2.4rem, 5vw, 3.6rem); font-weight: 500; letter-spacing: -0.03em; line-height: 1.1; margin-bottom: 1rem; }
+  .hero-sub { font-size: 1.1rem; color: var(--muted); max-width: 480px; margin-bottom: 2rem; }
+  .btn-group { display: flex; gap: 12px; flex-wrap: wrap; }
+  .btn { display: inline-block; padding: 10px 22px; border-radius: 8px; font-size: 14px; font-weight: 500; text-decoration: none; cursor: pointer; transition: all 0.15s; border: 1px solid transparent; }
+  .btn-primary { background: var(--text); color: #fff; }
+  .btn-primary:hover { background: #333; }
+  .btn-outline { background: transparent; color: var(--text); border-color: var(--border); }
+  .btn-outline:hover { border-color: #aaa; }
+
+  /* DIVIDER */
+  .divider { border: none; border-top: 0.5px solid var(--border); margin: 0 2rem; }
+
+  /* ABOUT */
+  .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: start; }
+  .section-label { font-size: 12px; color: var(--muted); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 1.2rem; }
+  .about-bio { font-size: 1rem; color: var(--muted); line-height: 1.8; }
+  .skills-list { display: flex; flex-wrap: wrap; gap: 8px; }
+  .skill-tag { font-size: 13px; padding: 5px 12px; border-radius: 20px; background: var(--bg2); color: var(--text); border: 0.5px solid var(--border); }
+
+  /* PROJECTS */
+  .projects-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.2rem; }
+  .project-card { background: var(--bg); border: 0.5px solid var(--border); border-radius: 12px; padding: 1.4rem; transition: border-color 0.15s; }
+  .project-card:hover { border-color: #aaa; }
+  .project-title { font-size: 15px; font-weight: 500; margin-bottom: 0.4rem; }
+  .project-desc { font-size: 13px; color: var(--muted); margin-bottom: 1rem; line-height: 1.6; }
+  .project-stack { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 1rem; }
+  .stack-tag { font-size: 11px; padding: 3px 9px; border-radius: 4px; background: var(--bg2); color: var(--muted); }
+  .project-links { display: flex; gap: 12px; }
+  .project-link { font-size: 12px; color: var(--muted); text-decoration: none; border-bottom: 0.5px solid var(--border); padding-bottom: 1px; transition: color 0.15s; }
+  .project-link:hover { color: var(--text); }
+
+  /* CONTACT */
+  .contact-inner { max-width: 480px; }
+  .contact-heading { font-size: 1.8rem; font-weight: 500; letter-spacing: -0.02em; margin-bottom: 0.6rem; }
+  .contact-sub { color: var(--muted); margin-bottom: 2rem; }
+  .contact-links { display: flex; gap: 1.2rem; flex-wrap: wrap; }
+  .contact-link { font-size: 14px; color: var(--text); text-decoration: none; display: flex; align-items: center; gap: 6px; border-bottom: 0.5px solid var(--border); padding-bottom: 2px; transition: border-color 0.15s; }
+  .contact-link:hover { border-color: var(--text); }
+
+  /* FOOTER */
+  footer { border-top: 0.5px solid var(--border); }
+  .footer-inner { max-width: 900px; margin: 0 auto; padding: 1.5rem 2rem; display: flex; justify-content: space-between; align-items: center; font-size: 13px; color: var(--muted); }
+
+  @media (max-width: 600px) {
+    .about-grid { grid-template-columns: 1fr; gap: 2rem; }
+    .nav-links { gap: 1.2rem; }
+  }
+</style>
 </head>
-
 <body>
-    <p style="background-image: url('assets/imgs/header.jpg');">
-     <!-- page header -->
-    <header id="home" class="header">
-        <div class="overlay"></div>
-        <div class="header-content container">
-            <h1 class="header-title">
-                <span class="up">HI!</span>
-                <span class="down">I am Jacob</span>
-            </h1>
-            <p class="header-subtitle">ASPIRING DEVELOPER</p>
 
-            <button class="btn btn-primary">Visit My Works</button>
-        </div>
-    </header>
-    <div class="container">
-        <footer class="footer">
+<div id="hero-bg"><canvas id="c"></canvas></div>
+<nav>
+  <div class="nav-inner">
+    <a href="#hero" class="nav-logo">Alex Morgan</a>
+    <ul class="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </div>
+</nav>
 
-            <div class="social-links text-right m-auto ml-sm-auto">
-                <a href="https://www.linkedin.com/in/jacob-worm-3240072b8"><i class="ti-facebook"></i></a>
-                <a href="javascript:void(0)" class="link"><i class="ti-twitter-alt"></i></a>
-                <a href="javascript:void(0)" class="link"><i class="ti-google"></i></a>
-                <a href="javascript:void(0)" class="link"><i class="ti-pinterest-alt"></i></a>
-                <a href="javascript:void(0)" class="link"><i class="ti-instagram"></i></a>
-                <a href="javascript:void(0)" class="link"><i class="ti-rss"></i></a>
-            </div>
-        </footer>
+<section id="hero">
+  <p class="hero-tag">Full-Stack Developer</p>
+  <h1 class="hero-name">Building things<br>for the web.</h1>
+  <p class="hero-sub">I design and build clean, fast, and accessible digital products — from concept to deployment.</p>
+  <div class="btn-group">
+    <a href="#projects" class="btn btn-primary">View my work</a>
+    <a href="#contact" class="btn btn-outline">Get in touch</a>
+  </div>
+</section>
+
+<hr class="divider">
+
+<section id="about">
+  <p class="section-label">About</p>
+  <div class="about-grid">
+    <div>
+      <p class="about-bio">I'm a full-stack developer with 5+ years of experience building web applications. I care deeply about performance, clean code, and great user experiences.<br><br>When I'm not coding, you'll find me hiking, reading, or tinkering with side projects.</p>
     </div>
-    <script src="js/script.js"></script>
+    <div>
+      <p class="section-label" style="margin-bottom: 0.8rem;">Technologies</p>
+      <div class="skills-list">
+        <span class="skill-tag">TypeScript</span>
+        <span class="skill-tag">React</span>
+        <span class="skill-tag">Node.js</span>
+        <span class="skill-tag">PostgreSQL</span>
+        <span class="skill-tag">Python</span>
+        <span class="skill-tag">Docker</span>
+        <span class="skill-tag">AWS</span>
+        <span class="skill-tag">GraphQL</span>
+        <span class="skill-tag">Next.js</span>
+      </div>
+    </div>
+  </div>
+</section>
 
+<hr class="divider">
+
+<section id="projects">
+  <p class="section-label">Projects</p>
+  <div class="projects-grid">
+
+    <div class="project-card">
+      <p class="project-title">Budgetly</p>
+      <p class="project-desc">A personal finance tracker with real-time sync, category insights, and smart monthly reports.</p>
+      <div class="project-stack">
+        <span class="stack-tag">Next.js</span>
+        <span class="stack-tag">Prisma</span>
+        <span class="stack-tag">PostgreSQL</span>
+      </div>
+      <div class="project-links">
+        <a href="#" class="project-link">GitHub →</a>
+        <a href="#" class="project-link">Live demo →</a>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <p class="project-title">Codewatch</p>
+      <p class="project-desc">A developer dashboard that aggregates GitHub activity, PRs, and CI/CD status in one view.</p>
+      <div class="project-stack">
+        <span class="stack-tag">React</span>
+        <span class="stack-tag">Node.js</span>
+        <span class="stack-tag">GitHub API</span>
+      </div>
+      <div class="project-links">
+        <a href="#" class="project-link">GitHub →</a>
+        <a href="#" class="project-link">Live demo →</a>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <p class="project-title">Markflow</p>
+      <p class="project-desc">A minimal Markdown editor with live preview, file management, and offline-first support.</p>
+      <div class="project-stack">
+        <span class="stack-tag">TypeScript</span>
+        <span class="stack-tag">Electron</span>
+        <span class="stack-tag">SQLite</span>
+      </div>
+      <div class="project-links">
+        <a href="#" class="project-link">GitHub →</a>
+        <a href="#" class="project-link">Download →</a>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<hr class="divider">
+
+<section id="contact">
+  <div class="contact-inner">
+    <p class="section-label">Contact</p>
+    <h2 class="contact-heading">Let's work together.</h2>
+    <p class="contact-sub">I'm open to freelance projects, full-time roles, and interesting collaborations. Feel free to reach out.</p>
+    <div class="contact-links">
+      <a href="mailto:hello@alexmorgan.dev" class="contact-link">hello@alexmorgan.dev</a>
+      <a href="#" class="contact-link">GitHub</a>
+      <a href="#" class="contact-link">LinkedIn</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <span>Alex Morgan</span>
+    <span>2026</span>
+  </div>
+</footer>
+
+<script>
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+let W, H, dots, mouse = {x: -999, y: -999};
+const N = 60, R = 140, DOT_R = 1.8;
+
+function resize() {
+  W = canvas.width = canvas.offsetWidth;
+  H = canvas.height = canvas.offsetHeight;
+}
+
+function init() {
+  resize();
+  dots = Array.from({length: N}, () => ({
+    x: Math.random() * W, y: Math.random() * H,
+    vx: (Math.random() - 0.5) * 0.4,
+    vy: (Math.random() - 0.5) * 0.4,
+  }));
+}
+
+function draw() {
+  ctx.clearRect(0, 0, W, H);
+  ctx.fillStyle = '#f4f3f8';
+  ctx.fillRect(0, 0, W, H);
+
+  for (let i = 0; i < N; i++) {
+    const d = dots[i];
+    d.x += d.vx; d.y += d.vy;
+    if (d.x < 0 || d.x > W) d.vx *= -1;
+    if (d.y < 0 || d.y > H) d.vy *= -1;
+
+    for (let j = i + 1; j < N; j++) {
+      const e = dots[j];
+      const dx = d.x - e.x, dy = d.y - e.y;
+      const dist = Math.sqrt(dx*dx + dy*dy);
+      if (dist < R) {
+        ctx.beginPath();
+        ctx.strokeStyle = `rgba(120,110,180,${(1 - dist/R) * 0.18})`;
+        ctx.lineWidth = 0.8;
+        ctx.moveTo(d.x, d.y);
+        ctx.lineTo(e.x, e.y);
+        ctx.stroke();
+      }
+    }
+
+    const mx = d.x - mouse.x, my = d.y - mouse.y;
+    const md = Math.sqrt(mx*mx + my*my);
+    if (md < R * 1.5) {
+      ctx.beginPath();
+      ctx.strokeStyle = `rgba(100,90,170,${(1 - md/(R*1.5)) * 0.35})`;
+      ctx.lineWidth = 0.8;
+      ctx.moveTo(d.x, d.y);
+      ctx.lineTo(mouse.x, mouse.y);
+      ctx.stroke();
+    }
+
+    ctx.beginPath();
+    ctx.arc(d.x, d.y, DOT_R, 0, Math.PI * 2);
+    ctx.fillStyle = 'rgba(100,90,170,0.35)';
+    ctx.fill();
+  }
+  requestAnimationFrame(draw);
+}
+
+window.addEventListener('mousemove', e => {
+  const r = canvas.getBoundingClientRect();
+  mouse.x = e.clientX - r.left;
+  mouse.y = e.clientY - r.top;
+});
+window.addEventListener('resize', () => { resize(); });
+init(); draw();
+</script>
 </body>
-
 </html>
